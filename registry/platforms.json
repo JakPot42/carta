@@ -1,0 +1,135 @@
+{
+  "version": "1.0.0",
+  "last_updated": "2026-06-15",
+  "description": "Community-maintained registry of platform Carta audit results. Submit PRs to add or update entries.",
+  "platforms": [
+    {
+      "id": "twitter",
+      "aliases": ["twitter.com", "x.com", "x"],
+      "display_name": "X (formerly Twitter)",
+      "tos_url": "https://twitter.com/en/tos",
+      "privacy_url": "https://twitter.com/en/privacy",
+      "audit_result": null
+    },
+    {
+      "id": "meta",
+      "aliases": ["facebook.com", "facebook", "meta.com"],
+      "display_name": "Meta (Facebook)",
+      "tos_url": "https://www.facebook.com/legal/terms",
+      "privacy_url": "https://www.facebook.com/privacy/policy/",
+      "audit_result": null
+    },
+    {
+      "id": "google",
+      "aliases": ["google.com"],
+      "display_name": "Google",
+      "tos_url": "https://policies.google.com/terms",
+      "privacy_url": "https://policies.google.com/privacy",
+      "audit_result": null
+    },
+    {
+      "id": "tiktok",
+      "aliases": ["tiktok.com"],
+      "display_name": "TikTok",
+      "tos_url": "https://www.tiktok.com/legal/page/us/terms-of-service/en",
+      "privacy_url": "https://www.tiktok.com/legal/page/us/privacy-policy/en",
+      "audit_result": null
+    },
+    {
+      "id": "reddit",
+      "aliases": ["reddit.com"],
+      "display_name": "Reddit",
+      "tos_url": "https://www.redditinc.com/policies/user-agreement",
+      "privacy_url": "https://www.reddit.com/policies/privacy-policy",
+      "audit_result": null
+    },
+    {
+      "id": "linkedin",
+      "aliases": ["linkedin.com"],
+      "display_name": "LinkedIn",
+      "tos_url": "https://www.linkedin.com/legal/user-agreement",
+      "privacy_url": "https://www.linkedin.com/legal/privacy-policy",
+      "audit_result": null
+    },
+    {
+      "id": "discord",
+      "aliases": ["discord.com", "discord.gg"],
+      "display_name": "Discord",
+      "tos_url": "https://discord.com/terms",
+      "privacy_url": "https://discord.com/privacy",
+      "audit_result": null
+    },
+    {
+      "id": "slack",
+      "aliases": ["slack.com"],
+      "display_name": "Slack",
+      "tos_url": "https://slack.com/intl/en-us/terms-of-service",
+      "privacy_url": "https://slack.com/intl/en-us/privacy-policy",
+      "audit_result": null
+    },
+    {
+      "id": "github",
+      "aliases": ["github.com"],
+      "display_name": "GitHub",
+      "tos_url": "https://docs.github.com/en/site-policy/github-terms/github-terms-of-service",
+      "privacy_url": "https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement",
+      "audit_result": null
+    },
+    {
+      "id": "instagram",
+      "aliases": ["instagram.com"],
+      "display_name": "Instagram",
+      "tos_url": "https://help.instagram.com/581066165581870",
+      "privacy_url": "https://privacycenter.instagram.com/policy/",
+      "audit_result": null
+    },
+    {
+      "id": "mastodon",
+      "aliases": ["mastodon.social"],
+      "display_name": "Mastodon (mastodon.social)",
+      "tos_url": "https://mastodon.social/terms",
+      "privacy_url": "https://mastodon.social/privacy-policy",
+      "audit_result": {
+        "carta_version": "1.0.0",
+        "platform": "mastodon",
+        "platform_url": "https://mastodon.social",
+        "tos_url": "https://mastodon.social/terms",
+        "privacy_url": "https://mastodon.social/privacy-policy",
+        "audited_at": "2026-06-15T00:00:00Z",
+        "audited_by": "JakPot42",
+        "audit_method": "manual",
+        "notes": "Demo audit. Mastodon's open-source, federated nature gives it strong scores on portability and exit costs. Community-run instances vary in governance.",
+        "criteria_results": [
+          {"criterion_id": "DP-1", "value": 1.0, "label": "Yes", "evidence": {"url": "https://mastodon.social/settings/export", "delivery_method": "immediate_download", "stated_delivery_time": "immediately"}},
+          {"criterion_id": "DP-2", "value": 1.0, "label": "Open", "evidence": {"formats_offered": ["CSV", "JSON (ActivityPub)"], "schema_documentation_url": "https://www.w3.org/TR/activitypub/", "proprietary_reader_required": false}},
+          {"criterion_id": "DP-3", "value": 0.5, "label": "Viewable", "evidence": {"ad_interests_in_export": "not_applicable", "inferred_attributes_disclosed": "not_applicable", "third_party_inferences_included": "not_applicable"}, "notes": "No ad platform; export is comprehensive for a non-ad platform"},
+          {"criterion_id": "DR-1", "value": 1.0, "label": "Self-service", "evidence": {"url": "https://mastodon.social/settings/delete", "requires_support_contact": false, "deactivation_vs_deletion": "both_offered", "cooling_off_period_days": null}},
+          {"criterion_id": "DR-2", "value": 1.0, "label": "Bounded", "evidence": {"timeline_stated": true, "max_days_stated": 30, "backup_retention_mentioned": false, "backup_retention_days": null}},
+          {"criterion_id": "DR-3", "value": 1.0, "label": "Full", "evidence": {"ad_profile_deleted": "not_applicable", "third_party_copies_recalled": "yes", "exceptions_cited": []}},
+          {"criterion_id": "TN-1", "value": 0.5, "label": "7-13 days", "evidence": {"notice_period_stated": true, "notice_days": 7, "effective_date_language": "We will notify you at least 7 days before", "continued_use_acceptance": false}},
+          {"criterion_id": "TN-2", "value": 1.0, "label": "Direct", "evidence": {"notification_method": "email", "material_vs_all_changes": "material_changes_only"}},
+          {"criterion_id": "TN-3", "value": 1.0, "label": "Protected", "evidence": {"retroactive_language": "prohibited", "opt_in_for_material_changes": false, "quoted_clause": "Changes do not apply retroactively"}},
+          {"criterion_id": "SV-1", "value": 1.0, "label": "Specific + Controllable", "evidence": {"sharing_categories": ["hosting_infrastructure"], "opt_out_available": false, "sharing_purpose_stated": true}},
+          {"criterion_id": "SV-2", "value": 1.0, "label": "No sale", "evidence": {"sells_data": "no", "ccpa_opt_out_link": false, "sell_definition_in_policy": "We do not sell personal data"}},
+          {"criterion_id": "SV-3", "value": 0.5, "label": "Policy exists", "evidence": {"legal_request_policy_url": "https://mastodon.social/privacy-policy", "transparency_report_url": null, "transparency_report_includes_volumes": false, "last_report_date": null}},
+          {"criterion_id": "EC-1", "value": 1.0, "label": "Public + versioned", "evidence": {"api_exists": true, "api_access": "public", "versioning_policy": true, "api_docs_url": "https://docs.joinmastodon.org/api/"}},
+          {"criterion_id": "EC-2", "value": 0.75, "label": "6-11 months", "evidence": {"notice_period_stated": true, "notice_days": 180, "historical_compliance": "Generally good track record"}},
+          {"criterion_id": "EC-3", "value": 1.0, "label": "Open protocols", "evidence": {"import_supported": true, "import_sources": ["ActivityPub", "Twitter archive"], "activitypub_supported": true}},
+          {"criterion_id": "AC-1", "value": 1.0, "label": "Substantive", "evidence": {"ranking_policy_url": null, "factors_disclosed": true, "chronological_alternative": true}, "notes": "Mastodon is chronological by default; no ranking algorithm"},
+          {"criterion_id": "AC-2", "value": 1.0, "label": "Specific + Published stats", "evidence": {"policy_url": "https://mastodon.social/about", "automated_moderation_disclosed": true, "enforcement_data_published": true, "policy_specificity": "specific_with_examples"}},
+          {"criterion_id": "AC-3", "value": 1.0, "label": "Human review", "evidence": {"appeal_mechanism_url": "https://mastodon.social/disputes/appeals", "human_review_available": true, "appeal_timeline_stated": false, "reason_provided": true}}
+        ],
+        "category_scores": {
+          "DP": 85.0,
+          "DR": 100.0,
+          "TN": 80.0,
+          "SV": 83.3,
+          "EC": 91.7,
+          "AC": 100.0
+        },
+        "overall_score": 88.3,
+        "tier": "Platinum"
+      }
+    }
+  ]
+}

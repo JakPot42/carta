@@ -1,0 +1,509 @@
+{
+  "$schema": "https://github.com/JakPot42/carta/raw/main/spec/carta-spec-schema.json",
+  "spec_version": "1.0.0",
+  "spec_date": "2026-06-15",
+  "title": "Carta Platform Accountability Specification",
+  "description": "A machine-auditable standard for evaluating platform power dynamics. Carta operationalizes the principle that platform power should be subject to written, verifiable, third-party-enforceable standards — like OpenAPI for human dignity.",
+  "repository": "https://github.com/JakPot42/carta",
+  "license": "CC0-1.0",
+
+  "design_notes": {
+    "on_machine_auditability": "Each criterion can be satisfied or not by reading a publicly available ToS, privacy policy, or developer documentation. No criterion requires guessing intent. 'Data portability is good' is a value claim. 'A machine-readable export endpoint exists in an open format' is an auditable fact.",
+    "on_data_portability_specifically": "The EFF, CDT, and GDPR regulators have spent years not converging on 'data portability' because it conflates three distinct things: (1) raw data you submitted, (2) derived data inferred from your behavior, (3) social graph data about your relationships. This spec measures all three separately. A platform that lets you download your photos in JPEG but retains your ad interest profile fails DP-3.",
+    "on_scope": "This spec audits policy text — what platforms claim to do. Compliance with their own stated policies is a separate question requiring operational verification. The spec measures the floor of protection the policy text establishes, not whether that floor is actually honored.",
+    "on_weights": "DP and DR carry the most weight because they represent the minimum conditions for user sovereignty — you can take your data, you can leave, you can erase your history. TN and SV reflect surveillance capitalism's core mechanisms. EC and AC matter but are second-order for most users on most platforms."
+  },
+
+  "categories": [
+    {
+      "id": "DP",
+      "name": "Data Portability",
+      "description": "Can you get your data out, in a useful form?",
+      "weight": 0.20,
+      "references": ["GDPR Art. 20", "CCPA §1798.100(d)", "DMA Art. 6(9)"],
+      "criteria": ["DP-1", "DP-2", "DP-3"]
+    },
+    {
+      "id": "DR",
+      "name": "Deletion Rights",
+      "description": "Can you erase your presence from the platform?",
+      "weight": 0.20,
+      "references": ["GDPR Art. 17", "CCPA §1798.105"],
+      "criteria": ["DR-1", "DR-2", "DR-3"]
+    },
+    {
+      "id": "TN",
+      "name": "Terms Notice",
+      "description": "How much warning do you get before the feudal contract changes?",
+      "weight": 0.20,
+      "references": ["CFPB guidance on unfair contract terms", "EU Directive 93/13/EEC on unfair terms"],
+      "criteria": ["TN-1", "TN-2", "TN-3"]
+    },
+    {
+      "id": "SV",
+      "name": "Surveillance",
+      "description": "What does the platform collect, share, and sell?",
+      "weight": 0.20,
+      "references": ["CCPA §1798.120 (opt-out of sale)", "GDPR Art. 6 (lawful basis)", "Children's Online Privacy Protection Act"],
+      "criteria": ["SV-1", "SV-2", "SV-3"]
+    },
+    {
+      "id": "EC",
+      "name": "Exit Costs",
+      "description": "How hard is it to leave, technically?",
+      "weight": 0.10,
+      "references": ["DMA Art. 6(9) (interoperability)", "EU Data Act Art. 23-31 (switching)"],
+      "criteria": ["EC-1", "EC-2", "EC-3"]
+    },
+    {
+      "id": "AC",
+      "name": "Accountability",
+      "description": "Are algorithmic decisions transparent and appealable?",
+      "weight": 0.10,
+      "references": ["GDPR Art. 22 (automated decision-making)", "DSA Art. 27 (recommender system transparency)"],
+      "criteria": ["AC-1", "AC-2", "AC-3"]
+    }
+  ],
+
+  "criteria": [
+    {
+      "id": "DP-1",
+      "category": "DP",
+      "name": "Export mechanism exists",
+      "description": "The platform provides a mechanism for users to request or download their data.",
+      "weight_in_category": 0.20,
+      "type": "binary",
+      "why_this_matters": "A platform that holds your data hostage with no export path has created a migration tax. This is table stakes. Note: a visible UI button that never delivers the export does not satisfy this criterion.",
+      "how_to_audit": "Look for 'Download your data', 'Request your data', or 'Export' in account settings, privacy center, or privacy policy. Confirm a delivery mechanism exists (immediate download or email link within stated timeframe).",
+      "evidence_fields": {
+        "url": "Direct URL to the export page or instructions",
+        "delivery_method": "immediate_download | email_link | postal_request | none",
+        "stated_delivery_time": "e.g., '30 days', 'immediately', null if not stated"
+      },
+      "rubric": [
+        {"value": 1.0, "label": "Yes", "description": "Export mechanism exists and is accessible without contacting support"},
+        {"value": 0.5, "label": "Partial", "description": "Export requires submitting a support ticket or written request (manual, not automated)"},
+        {"value": 0.0, "label": "No", "description": "No export mechanism found in policy, settings, or help documentation"}
+      ]
+    },
+    {
+      "id": "DP-2",
+      "category": "DP",
+      "name": "Export format is open and machine-readable",
+      "description": "The export format is documented, non-proprietary, and can be processed without platform-specific software.",
+      "weight_in_category": 0.30,
+      "type": "graded",
+      "why_this_matters": "A PDF printout of your data is not portable. A proprietary binary format requires the platform's own software to read. JSON, CSV, XML with a public schema, or ActivityPub-compatible formats are genuinely portable. The format determines whether portability is real or theater.",
+      "how_to_audit": "Check what formats are offered in the export. Verify whether the format is documented (open schema), commonly supported by third-party tools, and whether it includes structured data (not just rendered HTML).",
+      "evidence_fields": {
+        "formats_offered": "Array of format strings, e.g., ['JSON', 'CSV', 'ZIP of media files']",
+        "schema_documentation_url": "URL to schema docs, or null",
+        "proprietary_reader_required": "boolean"
+      },
+      "rubric": [
+        {"value": 1.0, "label": "Open", "description": "Standard open format (JSON/CSV/XML/ZIP of standard files) with documented schema. No proprietary reader required."},
+        {"value": 0.5, "label": "Partial", "description": "Mixed: some data in open format, some in proprietary or rendered-only format"},
+        {"value": 0.0, "label": "Closed", "description": "Proprietary format only, or PDF/HTML rendering with no machine-readable structured data"}
+      ]
+    },
+    {
+      "id": "DP-3",
+      "category": "DP",
+      "name": "Export includes derived and inferred data",
+      "description": "The export includes not just data you submitted, but inferences and profiles derived from your behavior — ad interest categories, behavioral segments, inferred attributes.",
+      "weight_in_category": 0.50,
+      "type": "graded",
+      "why_this_matters": "This is where portability claims collapse in practice. Your photos and posts are often the least valuable part of your data footprint. The advertising interest profile — your inferred income bracket, health conditions, political views, psychological traits — is what the platform monetizes. A 'data export' that omits this is exporting your handwriting while retaining your soul. Reference: GDPR Art. 20 explicitly covers 'data you have provided' but not inferred data; this goes beyond GDPR.",
+      "how_to_audit": "Search for mentions of 'ad interests', 'your ad topics', 'interest categories', 'inferred attributes', 'off-platform activity', or 'behavioral profile' in the privacy policy and in the export contents. Facebook's 'Your Facebook Information > Ads' page shows inferred categories but does NOT include them in the download — that's 0.5, not 1.0.",
+      "evidence_fields": {
+        "ad_interests_in_export": "yes | no | viewable_but_not_downloadable",
+        "inferred_attributes_disclosed": "yes | no | partial",
+        "third_party_inferences_included": "yes | no | not_applicable"
+      },
+      "rubric": [
+        {"value": 1.0, "label": "Full", "description": "Export explicitly includes inferred interest categories, ad profiles, and off-platform behavioral data. Policy confirms this."},
+        {"value": 0.5, "label": "Viewable", "description": "Inferred data is viewable in-app (e.g., 'your ad interests') but not included in the downloadable export"},
+        {"value": 0.0, "label": "Excluded", "description": "Inferred/derived data is not included in export, not mentioned, or explicitly excluded"}
+      ]
+    },
+    {
+      "id": "DR-1",
+      "category": "DR",
+      "name": "Account deletion mechanism exists",
+      "description": "Users can delete their account through a self-service mechanism without requiring a support ticket.",
+      "weight_in_category": 0.20,
+      "type": "binary",
+      "why_this_matters": "Requiring users to email support to delete their account is a friction tactic. Dark patterns like 'deactivate' (which preserves data) vs. 'delete' (which removes it) should be noted. The mechanism must result in actual deletion, not deactivation.",
+      "how_to_audit": "Find the account deletion path in settings. Verify it results in deletion (not just deactivation). Check if it requires contacting support. Note any waiting periods before deletion proceeds.",
+      "evidence_fields": {
+        "url": "URL to deletion settings",
+        "requires_support_contact": "boolean",
+        "deactivation_vs_deletion": "deletion | deactivation_only | both_offered",
+        "cooling_off_period_days": "integer or null"
+      },
+      "rubric": [
+        {"value": 1.0, "label": "Self-service", "description": "Self-service deletion exists in account settings, results in actual deletion, no support contact required"},
+        {"value": 0.5, "label": "Manual", "description": "Deletion requires submitting a support request, privacy request form, or emailing a DPO"},
+        {"value": 0.0, "label": "None", "description": "No deletion mechanism found; only deactivation offered; or deletion is not described anywhere"}
+      ]
+    },
+    {
+      "id": "DR-2",
+      "category": "DR",
+      "name": "Deletion timeline is stated and bounded",
+      "description": "The policy states a specific maximum number of days within which deletion is completed.",
+      "weight_in_category": 0.30,
+      "type": "graded",
+      "why_this_matters": "Indefinite deletion timelines are deletion in name only. 'We will delete your data when we get around to it' is functionally the same as not deleting it. GDPR requires 'without undue delay'; CCPA requires within 45 days. Platforms should state a specific number.",
+      "how_to_audit": "Search the privacy policy for 'delete', 'removal', 'erasure'. Identify if a specific timeframe is stated. Note if the timeframe includes or excludes backup retention.",
+      "evidence_fields": {
+        "timeline_stated": "boolean",
+        "max_days_stated": "integer or null",
+        "backup_retention_mentioned": "boolean",
+        "backup_retention_days": "integer or null"
+      },
+      "rubric": [
+        {"value": 1.0, "label": "Bounded", "description": "Specific maximum deletion timeline ≤30 days stated for primary systems AND backup retention stated ≤90 days"},
+        {"value": 0.5, "label": "Partial", "description": "Timeline stated but >30 days, OR timeline stated but backup retention is indefinite or unspecified"},
+        {"value": 0.0, "label": "Unstated", "description": "No specific deletion timeline stated; or timeline is 'within a reasonable time' without specifics"}
+      ]
+    },
+    {
+      "id": "DR-3",
+      "category": "DR",
+      "name": "Deletion scope covers derived and third-party data",
+      "description": "Deletion removes not just submitted content but also inferred profiles, third-party shared copies, and ad targeting data generated from your behavior.",
+      "weight_in_category": 0.50,
+      "type": "graded",
+      "why_this_matters": "The hardest deletion question. When you delete your Facebook account, does Facebook delete the behavioral model of you that was sold to advertisers? Does Google delete your interests profile from all ad networks it operates? Does the deletion reach data shared with 'business partners' under the old ToS? Most platforms cite GDPR Art. 17 exceptions (legal obligation, public interest) to retain data indefinitely. This criterion measures the scope of what's actually erased.",
+      "how_to_audit": "Check privacy policy for what survives deletion: 'certain information may be retained', 'anonymized', 'aggregated', 'for legal obligations'. The question is whether your *identified* profile — including ad targeting, inferences, and shared third-party copies — is actually erased or just disassociated from your account.",
+      "evidence_fields": {
+        "ad_profile_deleted": "yes | anonymized_only | retained | not_stated",
+        "third_party_copies_recalled": "yes | no | not_stated",
+        "exceptions_cited": "Array of exception categories claimed, e.g., ['legal_obligation', 'fraud_prevention', 'aggregated_analytics']"
+      },
+      "rubric": [
+        {"value": 1.0, "label": "Full", "description": "Policy explicitly states deletion includes ad targeting data, inferred profiles, and instructs deletion of data shared with business partners"},
+        {"value": 0.5, "label": "Partial", "description": "Core account data deleted but ad profiles 'anonymized' rather than deleted, OR third-party data explicitly excluded from deletion scope"},
+        {"value": 0.0, "label": "Narrow", "description": "Deletion covers only submitted content; derived data, backup copies, and third-party shares explicitly or implicitly retained"}
+      ]
+    },
+    {
+      "id": "TN-1",
+      "category": "TN",
+      "name": "Advance notice period before ToS changes take effect",
+      "description": "The platform provides written advance notice of ToS changes before those changes become binding, with a stated minimum notice period.",
+      "weight_in_category": 0.40,
+      "type": "graded",
+      "why_this_matters": "This is the Magna Carta criterion. The original ToS feudalism: 'We may change these terms at any time and your continued use constitutes acceptance.' That is not a contract — it is a terms-of-surrender. A minimum advance notice period before changes take effect is the difference between an adhesion contract and a consent mechanism. 30 days is the reasonable minimum; 7 days barely counts.",
+      "how_to_audit": "Search the ToS for 'notice', 'changes', 'modifications', 'effective date'. Look for the clause describing how users are notified and when changes become effective relative to notification. Flag 'continued use constitutes acceptance' without notice period as 0.0.",
+      "evidence_fields": {
+        "notice_period_stated": "boolean",
+        "notice_days": "integer or null",
+        "effective_date_language": "Quoted text from the ToS",
+        "continued_use_acceptance": "boolean"
+      },
+      "rubric": [
+        {"value": 1.0, "label": "30+ days", "description": "Changes become effective 30 or more days after notification"},
+        {"value": 0.75, "label": "14-29 days", "description": "Changes become effective 14-29 days after notification"},
+        {"value": 0.5, "label": "7-13 days", "description": "Changes become effective 7-13 days after notification"},
+        {"value": 0.25, "label": "<7 days", "description": "Changes become effective within 7 days of notification"},
+        {"value": 0.0, "label": "None", "description": "No advance notice period stated; changes effective immediately or upon posting; continued use constitutes acceptance without stated delay"}
+      ]
+    },
+    {
+      "id": "TN-2",
+      "category": "TN",
+      "name": "Direct notification method",
+      "description": "Platform notifies users directly of material ToS changes, not just by updating a webpage.",
+      "weight_in_category": 0.35,
+      "type": "graded",
+      "why_this_matters": "Posting an update to a terms page that users never visit is functionally no notice at all. Direct notification — email, in-app notification — places the responsibility of communication on the platform, not the user. 'We posted it on our website' is not notice.",
+      "how_to_audit": "Search for how material changes are communicated: 'we will notify you by email', 'in-app notification', 'posting on our website', 'at our discretion'. Distinguish between notification methods: direct (email/in-app push) vs. passive (webpage update).",
+      "evidence_fields": {
+        "notification_method": "email | in_app | website_only | at_discretion | not_stated",
+        "material_vs_all_changes": "all_changes | material_changes_only | not_distinguished"
+      },
+      "rubric": [
+        {"value": 1.0, "label": "Direct", "description": "Email or in-app notification is committed to for material changes"},
+        {"value": 0.5, "label": "Passive", "description": "Notification by posting to the terms page, app store listing, or platform announcement (user must find it)"},
+        {"value": 0.0, "label": "None", "description": "No notification method stated; 'at our discretion'; or continued use is the only notice mechanism"}
+      ]
+    },
+    {
+      "id": "TN-3",
+      "category": "TN",
+      "name": "No retroactive binding changes without opt-in",
+      "description": "Platform commits not to apply materially changed terms retroactively to past data or past behavior without explicit user consent.",
+      "weight_in_category": 0.25,
+      "type": "graded",
+      "why_this_matters": "The 2022 WhatsApp ToS update tried to retroactively apply new data sharing terms to historical messages. The Instagram 2012 'we can sell your photos' update would have applied retroactively. Retroactive application is the feudal clause that makes all prior agreements meaningless. This criterion measures whether the platform explicitly limits the retroactive reach of new terms.",
+      "how_to_audit": "Look for language about whether new terms apply to past data, past behavior, or content uploaded before the change. Look for opt-out or opt-in clauses for material changes. 'Continued use' clauses that apply to historical data fail this criterion.",
+      "evidence_fields": {
+        "retroactive_language": "prohibited | not_mentioned | explicitly_permitted",
+        "opt_in_for_material_changes": "boolean",
+        "quoted_clause": "Relevant text from ToS"
+      },
+      "rubric": [
+        {"value": 1.0, "label": "Protected", "description": "Policy explicitly states new terms do not apply retroactively to existing data OR requires affirmative opt-in for material changes affecting past data"},
+        {"value": 0.5, "label": "Silent", "description": "Policy is silent on retroactive application; no opt-in mechanism but no explicit retroactive permission either"},
+        {"value": 0.0, "label": "Retroactive", "description": "Policy explicitly permits retroactive application of new terms, or 'continued use' language applies to past content and data"}
+      ]
+    },
+    {
+      "id": "SV-1",
+      "category": "SV",
+      "name": "Third-party data sharing scope",
+      "description": "The policy states who the platform shares personal data with and for what purpose.",
+      "weight_in_category": 0.30,
+      "type": "graded",
+      "why_this_matters": "The surveillance economy runs on data brokerage. 'We share with partners to improve your experience' is deliberately vague. Concrete named categories of recipients, with stated purposes and opt-out mechanisms, are the minimum for informed consent. 'Business partners' without further definition covers the entire data broker ecosystem.",
+      "how_to_audit": "Find the data sharing section of the privacy policy. Identify: (a) what categories of third parties data is shared with, (b) whether those categories are named specifically or defined vaguely, (c) what user controls exist over sharing.",
+      "evidence_fields": {
+        "sharing_categories": "Array of named categories: ['advertisers', 'analytics_vendors', 'law_enforcement', 'business_partners', 'data_brokers', 'affiliates']",
+        "opt_out_available": "boolean",
+        "sharing_purpose_stated": "boolean"
+      },
+      "rubric": [
+        {"value": 1.0, "label": "Specific + Controllable", "description": "Named categories of recipients, stated purposes for each, and opt-out mechanism for non-essential sharing"},
+        {"value": 0.5, "label": "Disclosed", "description": "Sharing categories disclosed but with vague descriptions ('trusted partners', 'service providers') and/or no opt-out"},
+        {"value": 0.0, "label": "Blanket", "description": "Broad consent to share with undefined 'third parties' or 'business partners' without specific purpose or opt-out"}
+      ]
+    },
+    {
+      "id": "SV-2",
+      "category": "SV",
+      "name": "No sale of personal data to brokers",
+      "description": "The platform explicitly does not sell personal data to data brokers or third-party advertisers.",
+      "weight_in_category": 0.40,
+      "type": "graded",
+      "why_this_matters": "The word 'sell' is load-bearing under CCPA. Many platforms use 'share' or 'transfer' to avoid triggering CCPA 'sale' definitions while functionally selling data. The CCPA definition of 'sale' includes disclosure for monetary or other valuable consideration — which covers most ad-tech arrangements. This criterion follows the functional definition, not the platform's chosen term.",
+      "how_to_audit": "Search for 'sell', 'sale', 'monetize', 'third-party advertising'. Look for CCPA 'Do Not Sell My Personal Information' link. Note: a platform with a 'Do Not Sell' link acknowledges it sells data; the opt-out mechanism upgrades the score from 0.0 to 0.5.",
+      "evidence_fields": {
+        "sells_data": "yes | no | rebranded_as_share",
+        "ccpa_opt_out_link": "boolean",
+        "sell_definition_in_policy": "Quoted text from privacy policy"
+      },
+      "rubric": [
+        {"value": 1.0, "label": "No sale", "description": "Policy explicitly states personal data is not sold to data brokers or for third-party advertising. Confirmed, not just a CCPA opt-out link."},
+        {"value": 0.5, "label": "Opt-out available", "description": "Data is sold but CCPA 'Do Not Sell My Personal Information' opt-out exists and is easily findable"},
+        {"value": 0.0, "label": "Sold without opt-out", "description": "Data is sold or shared-for-value with no opt-out mechanism, or sale occurs but is rebranded to avoid definition"}
+      ]
+    },
+    {
+      "id": "SV-3",
+      "category": "SV",
+      "name": "Government access policy",
+      "description": "The platform has a stated policy for responding to government data requests and publishes transparency reports.",
+      "weight_in_category": 0.30,
+      "type": "graded",
+      "why_this_matters": "Surveillance capitalism and state surveillance intersect at the data broker. A platform that sells behavioral data to advertisers also sells it — or hands it over — to governments with less friction than its ToS suggests. Transparency reports with specific numbers of requests received, resisted, and complied with are the minimum signal that a platform takes this seriously.",
+      "how_to_audit": "Search for 'law enforcement', 'government requests', 'legal requests', 'transparency report'. Find the most recent transparency report and note if it contains request volumes.",
+      "evidence_fields": {
+        "legal_request_policy_url": "URL or null",
+        "transparency_report_url": "URL or null",
+        "transparency_report_includes_volumes": "boolean",
+        "last_report_date": "ISO date string or null"
+      },
+      "rubric": [
+        {"value": 1.0, "label": "Transparent", "description": "Published transparency report with specific government request volumes, legal challenge policy, and user notification commitment where legally permitted"},
+        {"value": 0.5, "label": "Policy exists", "description": "Written policy for government requests exists but no transparency report, or report is generic without volume data"},
+        {"value": 0.0, "label": "None", "description": "No policy for government data requests stated; no transparency report; or policy is 'we comply with applicable law' only"}
+      ]
+    },
+    {
+      "id": "EC-1",
+      "category": "EC",
+      "name": "Public API with documented versioning policy",
+      "description": "The platform provides a public API that developers and users can use to export or access data programmatically.",
+      "weight_in_category": 0.35,
+      "type": "graded",
+      "why_this_matters": "A public API is the technical manifestation of interoperability. Without it, data export is a one-time file download — not a live portability mechanism. Third-party clients, migration tools, and data pipelines all depend on API access. Versioning policy determines whether tools built on the API survive platform updates.",
+      "how_to_audit": "Search for developer documentation, API reference, or 'platform API'. Identify whether the API is public (no application required), open (application required but consistently approved), or restricted (application required with significant gatekeeping).",
+      "evidence_fields": {
+        "api_exists": "boolean",
+        "api_access": "public | application_required | partners_only | none",
+        "versioning_policy": "boolean",
+        "api_docs_url": "URL or null"
+      },
+      "rubric": [
+        {"value": 1.0, "label": "Public + versioned", "description": "Public API with documented stable versioning policy and deprecation notices"},
+        {"value": 0.5, "label": "Restricted", "description": "API exists but requires application approval, has inconsistent access, or has no versioning policy"},
+        {"value": 0.0, "label": "None", "description": "No public API, or API access restricted to platform-approved partners only"}
+      ]
+    },
+    {
+      "id": "EC-2",
+      "category": "EC",
+      "name": "API deprecation notice period",
+      "description": "When the platform deprecates an API endpoint or version, it provides advance notice of a stated minimum period.",
+      "weight_in_category": 0.35,
+      "type": "graded",
+      "why_this_matters": "Overnight API deprecation destroys third-party tools, breaking the user's ability to migrate. Twitter's API policy changes in 2023 gave third-party clients hours to days of notice before shutdown. The deprecation notice period determines how real the API-as-exit-ramp actually is.",
+      "how_to_audit": "Search developer documentation or platform policies for deprecation notice language. Identify the minimum committed notice period.",
+      "evidence_fields": {
+        "notice_period_stated": "boolean",
+        "notice_days": "integer or null",
+        "historical_compliance": "Note any known cases of below-policy deprecation"
+      },
+      "rubric": [
+        {"value": 1.0, "label": "12+ months", "description": "12 or more months advance notice for API deprecation committed in writing"},
+        {"value": 0.75, "label": "6-11 months", "description": "6-11 months advance notice"},
+        {"value": 0.5, "label": "3-5 months", "description": "3-5 months advance notice"},
+        {"value": 0.25, "label": "<3 months", "description": "Less than 3 months advance notice stated"},
+        {"value": 0.0, "label": "None", "description": "No deprecation notice policy; or 'at any time' language; or no API exists"}
+      ]
+    },
+    {
+      "id": "EC-3",
+      "category": "EC",
+      "name": "Import from competing platforms supported",
+      "description": "The platform allows users to import content or connections from a competing service — measuring interoperability from the entry direction.",
+      "weight_in_category": 0.30,
+      "type": "graded",
+      "why_this_matters": "Portability is meaningful only if there's somewhere to port to. Import support from competing platforms measures whether the receiving platform is building walls against incumbents or genuine network mobility. Mastodon/ActivityPub implementations score high here; closed platforms that only offer proprietary formats score zero.",
+      "how_to_audit": "Check if the platform offers import from other services (e.g., 'import your Twitter archive', 'import contacts from Gmail'). Look for ActivityPub or WebFinger support as a signal of protocol-level interoperability.",
+      "evidence_fields": {
+        "import_supported": "boolean",
+        "import_sources": "Array of supported source platforms or protocols",
+        "activitypub_supported": "boolean"
+      },
+      "rubric": [
+        {"value": 1.0, "label": "Open protocols", "description": "ActivityPub/WebFinger or equivalent open protocol supported, enabling federation and cross-platform content portability"},
+        {"value": 0.5, "label": "Import tools", "description": "Import from specific competing platforms supported via archive upload or API, but proprietary (not open protocol)"},
+        {"value": 0.0, "label": "None", "description": "No import from competing platforms; closed ecosystem with no inbound portability"}
+      ]
+    },
+    {
+      "id": "AC-1",
+      "category": "AC",
+      "name": "Algorithmic ranking and recommendation disclosure",
+      "description": "The platform explains in plain language how its ranking and recommendation algorithms affect what content users see.",
+      "weight_in_category": 0.35,
+      "type": "graded",
+      "why_this_matters": "Algorithmic amplification is the primary mechanism of platform power — more impactful than any individual ToS clause. A platform that uses engagement optimization to amplify outrage while claiming to 'show you relevant content' is exercising editorial power it refuses to acknowledge. The DSA requires transparency about recommender systems from large platforms. This criterion measures whether that transparency exists regardless of jurisdiction.",
+      "how_to_audit": "Search for 'algorithm', 'ranking', 'recommendation', 'how we decide what you see'. Look for a transparency center or algorithm explainer. Note if the explanation is substantive (specific factors) vs. vague ('content you might be interested in').",
+      "evidence_fields": {
+        "ranking_policy_url": "URL or null",
+        "factors_disclosed": "boolean",
+        "chronological_alternative": "boolean"
+      },
+      "rubric": [
+        {"value": 1.0, "label": "Substantive", "description": "Named ranking factors disclosed with relative weights or explanatory depth. Chronological/non-algorithmic alternative offered."},
+        {"value": 0.5, "label": "Acknowledged", "description": "Existence of ranking algorithm acknowledged with some explanation of goals (e.g., 'maximize engagement'), but factors not disclosed"},
+        {"value": 0.0, "label": "None", "description": "No disclosure of ranking algorithm existence or factors; or description is purely aspirational ('content you love')"}
+      ]
+    },
+    {
+      "id": "AC-2",
+      "category": "AC",
+      "name": "Content moderation policy transparency",
+      "description": "The platform publishes clear, specific content moderation policies and explains what decisions are made by humans vs. automated systems.",
+      "weight_in_category": 0.35,
+      "type": "graded",
+      "why_this_matters": "Opaque moderation is arbitrary power. Without published policies, moderation decisions are not meaningfully distinguishable from suppression. The Transparency Center model (Meta, YouTube) is table stakes — what matters is specificity: 'graphic violence' is not a policy; a taxonomy of what qualifies with examples is.",
+      "how_to_audit": "Search for 'community guidelines', 'content policy', 'moderation'. Look for whether: (a) policies are specific with examples, (b) human vs. automated moderation is disclosed, (c) aggregate enforcement data is published.",
+      "evidence_fields": {
+        "policy_url": "URL or null",
+        "automated_moderation_disclosed": "boolean",
+        "enforcement_data_published": "boolean",
+        "policy_specificity": "specific_with_examples | general_principles | none"
+      },
+      "rubric": [
+        {"value": 1.0, "label": "Specific + Published stats", "description": "Specific content policies with examples, automated vs. human moderation disclosed, enforcement volume data published (e.g., quarterly transparency report)"},
+        {"value": 0.5, "label": "Policies published", "description": "Content policies published but general/vague, or no disclosure of human vs. automated ratio, or no enforcement data"},
+        {"value": 0.0, "label": "None", "description": "No published content policy; or policy is 'at our discretion'; or link-only to generic Terms of Service"}
+      ]
+    },
+    {
+      "id": "AC-3",
+      "category": "AC",
+      "name": "Appeal mechanism for automated decisions",
+      "description": "Users can appeal content moderation or account action decisions made by automated systems.",
+      "weight_in_category": 0.30,
+      "type": "graded",
+      "why_this_matters": "GDPR Art. 22 gives users the right not to be subject to solely automated decisions that significantly affect them. Platform deplatforming, demonetization, and content removal are exactly these decisions. An appeal mechanism that routes to another automated review is not meaningful — a path to human review is the standard.",
+      "how_to_audit": "Find the appeals process for account suspensions or content removal. Identify whether appeals go to a human reviewer or another automated system. Check if the appeal outcome is communicated with a reason.",
+      "evidence_fields": {
+        "appeal_mechanism_url": "URL or null",
+        "human_review_available": "boolean",
+        "appeal_timeline_stated": "boolean",
+        "reason_provided": "boolean"
+      },
+      "rubric": [
+        {"value": 1.0, "label": "Human review", "description": "Appeal process exists with path to human review, stated timeline, and written reason for outcome"},
+        {"value": 0.5, "label": "Exists", "description": "Appeal mechanism exists but routes to automated re-review, or no human review, or no stated timeline/reason"},
+        {"value": 0.0, "label": "None", "description": "No appeal mechanism for automated content or account decisions"}
+      ]
+    }
+  ],
+
+  "scoring": {
+    "method": "weighted_average",
+    "category_score": "sum(criterion.value * criterion.weight_in_category) for criteria in category → scaled 0-100",
+    "overall_score": "sum(category.score * category.weight) → scaled 0-100",
+    "tiers": [
+      {
+        "name": "Platinum",
+        "min_overall": 85,
+        "min_per_category": 60,
+        "description": "Exceptional platform accountability. Meets or exceeds GDPR, CCPA, and DSA commitments across all dimensions.",
+        "badge_color": "#B5B5B5"
+      },
+      {
+        "name": "Gold",
+        "min_overall": 70,
+        "min_per_category": 45,
+        "description": "Strong accountability baseline. Meaningful protections in most categories with no catastrophic failures.",
+        "badge_color": "#FFD700"
+      },
+      {
+        "name": "Silver",
+        "min_overall": 50,
+        "min_per_category": null,
+        "description": "Partial accountability. Meaningful protections in some areas but significant gaps.",
+        "badge_color": "#C0C0C0"
+      },
+      {
+        "name": "Bronze",
+        "min_overall": 30,
+        "min_per_category": null,
+        "description": "Minimal accountability. Regulatory table stakes met but no meaningful user sovereignty.",
+        "badge_color": "#CD7F32"
+      },
+      {
+        "name": "Failing",
+        "min_overall": 0,
+        "min_per_category": null,
+        "description": "Feudal contract. Users have no meaningful sovereignty over their data, terms, or algorithmic treatment.",
+        "badge_color": "#DC2626"
+      }
+    ]
+  },
+
+  "audit_result_schema": {
+    "description": "Schema for a carta-audit-result.json produced by `carta audit`",
+    "required_fields": {
+      "carta_version": "string",
+      "platform": "string",
+      "platform_url": "string",
+      "tos_url": "string",
+      "privacy_policy_url": "string",
+      "audited_at": "ISO 8601 datetime",
+      "audited_by": "string (GitHub username or org)",
+      "audit_method": "automated | manual | hybrid",
+      "criteria_results": "Array of criterion result objects",
+      "category_scores": "Object mapping category ID to score 0-100",
+      "overall_score": "number 0-100",
+      "tier": "Platinum | Gold | Silver | Bronze | Failing",
+      "notes": "string (auditor notes, methodology caveats)"
+    },
+    "criterion_result": {
+      "criterion_id": "string",
+      "value": "number (0, 0.25, 0.5, 0.75, or 1.0)",
+      "label": "string (from rubric)",
+      "evidence": "object matching criterion's evidence_fields schema",
+      "notes": "string"
+    }
+  }
+}
