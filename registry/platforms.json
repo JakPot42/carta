@@ -9,7 +9,47 @@
       "display_name": "X (formerly Twitter)",
       "tos_url": "https://twitter.com/en/tos",
       "privacy_url": "https://twitter.com/en/privacy",
-      "audit_result": null
+      "audit_result": {
+        "carta_version": "1.0.0",
+        "platform": "twitter",
+        "platform_url": "https://x.com",
+        "tos_url": "https://twitter.com/en/tos",
+        "privacy_url": "https://twitter.com/en/privacy",
+        "audited_at": "2026-06-15T00:00:00Z",
+        "audited_by": "JakPot42",
+        "audit_method": "manual",
+        "notes": "Audited against x.com ToS and privacy policy (June 2026). Key context: API policy was gutted in January 2023 — Tweetbot, Twitterrific, and other third-party clients were terminated with <2 weeks notice. TN-1 reflects the global ToS only; EU/UK users receive 30 days notice via a separate addendum. SV-2 score reflects tension between explicit 'we do not sell' claim and functional advertising data sharing that constitutes 'sharing' under CCPA 2023 amendments.",
+        "criteria_results": [
+          {"criterion_id": "DP-1", "value": 1.0, "label": "Yes", "evidence": {"url": "https://twitter.com/settings/your_twitter_data/twitter_data", "delivery_method": "email_link", "stated_delivery_time": "within a few days"}},
+          {"criterion_id": "DP-2", "value": 1.0, "label": "Open", "evidence": {"formats_offered": ["JSON", "ZIP"], "schema_documentation_url": null, "proprietary_reader_required": false}, "notes": "Archive ZIP contains JSON data files. Platform also bundles an HTML viewer but raw JSON is accessible."},
+          {"criterion_id": "DP-3", "value": 0.5, "label": "Viewable", "evidence": {"ad_interests_in_export": "viewable_but_not_downloadable", "inferred_attributes_disclosed": "partial", "third_party_inferences_included": "no"}, "notes": "Ad interests and inferred topics are viewable in Settings > Privacy > Interests but are NOT included in the downloadable archive."},
+          {"criterion_id": "DR-1", "value": 1.0, "label": "Self-service", "evidence": {"url": "https://twitter.com/settings/deactivate", "requires_support_contact": false, "deactivation_vs_deletion": "both_offered", "cooling_off_period_days": 30}},
+          {"criterion_id": "DR-2", "value": 0.5, "label": "Partial", "evidence": {"timeline_stated": true, "max_days_stated": 30, "backup_retention_mentioned": true, "backup_retention_days": null}, "notes": "The 30-day deactivation/restoration window is stated. After that, data is 'queued for deletion' but no specific completion timeline is committed to."},
+          {"criterion_id": "DR-3", "value": 0.0, "label": "Narrow", "evidence": {"ad_profile_deleted": "not_stated", "third_party_copies_recalled": "no", "exceptions_cited": ["legal_obligation", "safety"]}, "notes": "Privacy policy is silent on whether ad targeting profiles, inferred interests, or data shared with ad partners is deleted upon account deletion."},
+          {"criterion_id": "TN-1", "value": 0.0, "label": "None", "evidence": {"notice_period_stated": false, "notice_days": null, "effective_date_language": "We will try to notify you of material revisions", "continued_use_acceptance": true}, "notes": "Global ToS: no committed advance notice period. EU/UK addendum separately grants 30 days, but this applies to a minority of users and is not the global default."},
+          {"criterion_id": "TN-2", "value": 1.0, "label": "Direct", "evidence": {"notification_method": "email", "material_vs_all_changes": "material_changes_only"}, "notes": "Committed to 'service notification or an email to the email associated with your account' for material revisions."},
+          {"criterion_id": "TN-3", "value": 1.0, "label": "Protected", "evidence": {"retroactive_language": "prohibited", "opt_in_for_material_changes": false, "quoted_clause": "The changes will not be retroactive"}},
+          {"criterion_id": "SV-1", "value": 0.5, "label": "Disclosed", "evidence": {"sharing_categories": ["service_providers", "advertisers_and_ad_partners", "affiliates", "api_developers", "video_partners", "corporate_affiliates"], "opt_out_available": true, "sharing_purpose_stated": true}, "notes": "Categories are named but descriptions remain vague ('ad partners' covers a broad ecosystem). CCPA opt-out exists in privacy settings."},
+          {"criterion_id": "SV-2", "value": 0.5, "label": "Opt-out available", "evidence": {"sells_data": "rebranded_as_share", "ccpa_opt_out_link": true, "sell_definition_in_policy": "And no, we don't sell your personal information."}, "notes": "Explicit 'no sale' claim, but X shares behavioral data with advertisers for targeting — which constitutes 'sharing' under CCPA 2023 amendments. Functional ad data monetization exists with CCPA opt-out mechanism."},
+          {"criterion_id": "SV-3", "value": 1.0, "label": "Transparent", "evidence": {"legal_request_policy_url": "https://help.twitter.com/en/rules-and-policies/twitter-legal-faqs", "transparency_report_url": "https://transparency.twitter.com", "transparency_report_includes_volumes": true, "last_report_date": "2023-01-01"}},
+          {"criterion_id": "EC-1", "value": 0.5, "label": "Restricted", "evidence": {"api_exists": true, "api_access": "application_required", "versioning_policy": false, "api_docs_url": "https://developer.x.com/en/docs"}, "notes": "API severely restricted since February 2023. Free tier: 1,500 tweets/month read access. Meaningful access requires paid subscription. No documented versioning policy."},
+          {"criterion_id": "EC-2", "value": 0.0, "label": "None", "evidence": {"notice_period_stated": false, "notice_days": null, "historical_compliance": "January 2023: Tweetbot, Twitterrific, and other major third-party clients shut down with <2 weeks notice after API policy change."}, "notes": "No stated deprecation notice policy. The January 2023 third-party client shutdown is the defining case study in inadequate API deprecation notice."},
+          {"criterion_id": "EC-3", "value": 0.0, "label": "None", "evidence": {"import_supported": false, "import_sources": [], "activitypub_supported": false}},
+          {"criterion_id": "AC-1", "value": 0.5, "label": "Acknowledged", "evidence": {"ranking_policy_url": "https://github.com/twitter/the-algorithm", "factors_disclosed": true, "chronological_alternative": true}, "notes": "For You (algorithmic) and Following (chronological) feeds both available. X open-sourced portions of the recommendation algorithm in April 2023. EU/UK ToS names some ranking factors. Non-EU global policy offers less detail."},
+          {"criterion_id": "AC-2", "value": 0.5, "label": "Policies published", "evidence": {"policy_url": "https://help.twitter.com/en/rules-and-policies", "automated_moderation_disclosed": true, "enforcement_data_published": true, "policy_specificity": "general_principles"}, "notes": "Community Guidelines and Rules exist. Enforcement transparency declined significantly post-2022 ownership change. Transparency reports have become less frequent."},
+          {"criterion_id": "AC-3", "value": 0.5, "label": "Exists", "evidence": {"appeal_mechanism_url": "https://help.twitter.com/forms/general", "human_review_available": false, "appeal_timeline_stated": false, "reason_provided": false}, "notes": "Appeals can be filed via Help Center. Process is often automated re-review. EU/UK users have stronger DSA-backed appeal rights including path to human review."}
+        ],
+        "category_scores": {
+          "DP": 75.0,
+          "DR": 35.0,
+          "TN": 60.0,
+          "SV": 65.0,
+          "EC": 17.5,
+          "AC": 50.0
+        },
+        "overall_score": 53.8,
+        "tier": "Silver"
+      }
     },
     {
       "id": "meta",
@@ -73,7 +113,47 @@
       "display_name": "GitHub",
       "tos_url": "https://docs.github.com/en/site-policy/github-terms/github-terms-of-service",
       "privacy_url": "https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement",
-      "audit_result": null
+      "audit_result": {
+        "carta_version": "1.0.0",
+        "platform": "github",
+        "platform_url": "https://github.com",
+        "tos_url": "https://docs.github.com/en/site-policy/github-terms/github-terms-of-service",
+        "privacy_url": "https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement",
+        "audited_at": "2026-06-15T00:00:00Z",
+        "audited_by": "JakPot42",
+        "audit_method": "manual",
+        "notes": "Audited against GitHub ToS and General Privacy Statement (June 2026). GitHub's subscription-based business model (not ad-based) materially affects SV scores. DP-3 reflects that developer activity — the primary source of GitHub's derived data — is exportable, though formal derived-preference files are not explicitly included in the archive. DR-3 credits the absence of an advertising profile but notes indefinite encrypted backup retention and lack of explicit third-party data recall. EC scores are among the best in the registry: 24-month API version support is an industry outlier.",
+        "criteria_results": [
+          {"criterion_id": "DP-1", "value": 1.0, "label": "Yes", "evidence": {"url": "https://github.com/settings/admin", "delivery_method": "email_link", "stated_delivery_time": "within 90 days of request"}},
+          {"criterion_id": "DP-2", "value": 1.0, "label": "Open", "evidence": {"formats_offered": ["JSON", "ZIP (git repositories)", "tar.gz"], "schema_documentation_url": "https://docs.github.com/en/rest", "proprietary_reader_required": false}},
+          {"criterion_id": "DP-3", "value": 0.5, "label": "Viewable", "evidence": {"ad_interests_in_export": "not_applicable", "inferred_attributes_disclosed": "partial", "third_party_inferences_included": "no"}, "notes": "GitHub's primary derived data (developer interests, preferred languages) is largely inferrable from exported code activity. Formal derived preference files are not explicitly included. GitHub uses behavioral advertising cookies on marketing pages but lacks the ad interest profiles of social platforms."},
+          {"criterion_id": "DR-1", "value": 1.0, "label": "Self-service", "evidence": {"url": "https://github.com/settings/admin", "requires_support_contact": false, "deactivation_vs_deletion": "deletion", "cooling_off_period_days": null}},
+          {"criterion_id": "DR-2", "value": 0.5, "label": "Partial", "evidence": {"timeline_stated": true, "max_days_stated": 90, "backup_retention_mentioned": true, "backup_retention_days": null}, "notes": "ToS states: 'we will delete your full profile and the Content of your repositories within 90 days of cancellation.' 90 days exceeds the 30-day threshold for a 1.0. Encrypted backups retained indefinitely with no stated timeline."},
+          {"criterion_id": "DR-3", "value": 0.5, "label": "Partial", "evidence": {"ad_profile_deleted": "not_applicable", "third_party_copies_recalled": "no", "exceptions_cited": ["legal_obligation", "encrypted_backups", "public_forks"]}, "notes": "Core account content deleted within 90 days. GitHub is subscription-based, so there is no advertising profile to delete — a material distinction from ad-supported platforms. However, encrypted backup retention is indefinite, Microsoft affiliate data retention is unaddressed, and public forks of repositories persist."},
+          {"criterion_id": "TN-1", "value": 1.0, "label": "30+ days", "evidence": {"notice_period_stated": true, "notice_days": 30, "effective_date_language": "we will notify users of any material changes to this Agreement...at least 30 days prior to the change taking effect", "continued_use_acceptance": true}},
+          {"criterion_id": "TN-2", "value": 1.0, "label": "Direct", "evidence": {"notification_method": "email", "material_vs_all_changes": "material_changes_only"}, "notes": "Email to primary account address committed for material changes. Website notice also mentioned."},
+          {"criterion_id": "TN-3", "value": 0.5, "label": "Silent", "evidence": {"retroactive_language": "not_mentioned", "opt_in_for_material_changes": false, "quoted_clause": null}, "notes": "No explicit prohibition on retroactive application of new terms. The 30-day forward notice implies non-retroactivity but this is not stated directly."},
+          {"criterion_id": "SV-1", "value": 0.5, "label": "Disclosed", "evidence": {"sharing_categories": ["microsoft_affiliates", "service_providers", "organization_accounts", "competent_authorities", "corporate_transaction_parties", "partners_and_resellers", "subprocessors", "third_party_marketplace_apps", "public"], "opt_out_available": true, "sharing_purpose_stated": true}, "notes": "Specific named categories with stated purposes — one of the most detailed disclosures audited. Opt-out is available for advertising cookies but not for core service-related sharing with affiliates and service providers."},
+          {"criterion_id": "SV-2", "value": 1.0, "label": "No sale", "evidence": {"sells_data": "no", "ccpa_opt_out_link": false, "sell_definition_in_policy": "we do not sell your data"}, "notes": "Explicit and unequivocal. GitHub is primarily a subscription-based developer platform; data monetization via ad brokerage is not the business model."},
+          {"criterion_id": "SV-3", "value": 1.0, "label": "Transparent", "evidence": {"legal_request_policy_url": "https://docs.github.com/en/site-policy/other-site-policies/guidelines-for-legal-requests-of-user-data", "transparency_report_url": "https://github.blog/category/transparency-report/", "transparency_report_includes_volumes": true, "last_report_date": "2023-01-01"}},
+          {"criterion_id": "EC-1", "value": 1.0, "label": "Public + versioned", "evidence": {"api_exists": true, "api_access": "public", "versioning_policy": true, "api_docs_url": "https://docs.github.com/en/rest"}, "notes": "Comprehensive public REST and GraphQL APIs. Date-based versioning (e.g., 2022-11-28). No application required for access."},
+          {"criterion_id": "EC-2", "value": 1.0, "label": "12+ months", "evidence": {"notice_period_stated": true, "notice_days": 730, "historical_compliance": "Strong track record; previous API versions explicitly supported for 24 months after new version release."}, "notes": "GitHub commits to at least 24 months of support for previous API versions when a new version is released. This is the effective deprecation notice period for version-level changes — an industry outlier."},
+          {"criterion_id": "EC-3", "value": 0.5, "label": "Import tools", "evidence": {"import_supported": true, "import_sources": ["Bitbucket", "GitLab", "SVN", "Mercurial", "Google Code", "CodePlex"], "activitypub_supported": false}, "notes": "GitHub Importer supports migration from a range of competing platforms. Import is proprietary tooling rather than open protocol support."},
+          {"criterion_id": "AC-1", "value": 0.5, "label": "Acknowledged", "evidence": {"ranking_policy_url": null, "factors_disclosed": false, "chronological_alternative": true}, "notes": "GitHub has an algorithmic 'For You' feed but does not substantively disclose ranking factors. The primary activity feed remains chronological. Recommendations exist but are secondary to the core product."},
+          {"criterion_id": "AC-2", "value": 1.0, "label": "Specific + Published stats", "evidence": {"policy_url": "https://docs.github.com/en/site-policy/github-terms/github-community-guidelines", "automated_moderation_disclosed": true, "enforcement_data_published": true, "policy_specificity": "specific_with_examples"}, "notes": "Detailed Community Guidelines and Acceptable Use Policies with specific examples. Annual transparency reports include DMCA takedown volumes, government request data, and account suspension data."},
+          {"criterion_id": "AC-3", "value": 0.5, "label": "Exists", "evidence": {"appeal_mechanism_url": "https://docs.github.com/en/site-policy/other-site-policies/github-deceased-user-policy", "human_review_available": true, "appeal_timeline_stated": false, "reason_provided": false}, "notes": "DMCA counter-notice process includes formal human review. General account suspension appeals are handled via support but the ToS explicitly reserves 'with or without cause, with or without notice' termination rights, undermining the appeal guarantee."}
+        ],
+        "category_scores": {
+          "DP": 75.0,
+          "DR": 60.0,
+          "TN": 87.5,
+          "SV": 85.0,
+          "EC": 85.0,
+          "AC": 67.5
+        },
+        "overall_score": 76.8,
+        "tier": "Gold"
+      }
     },
     {
       "id": "instagram",
